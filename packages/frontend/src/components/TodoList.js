@@ -1,5 +1,6 @@
 import React from 'react';
 import TodoCard from './TodoCard';
+import { isOverdue, getOverdueDays } from '../utils/dateUtils';
 
 function TodoList({ todos, onToggle, onEdit, onDelete, isLoading }) {
   if (todos.length === 0) {
@@ -12,9 +13,19 @@ function TodoList({ todos, onToggle, onEdit, onDelete, isLoading }) {
     );
   }
 
+  // Compute overdue status for all todos
+  const todosWithStatus = todos.map(todo => {
+    const overdueStatus = isOverdue(todo.dueDate, todo.completed);
+    return {
+      ...todo,
+      isOverdue: overdueStatus,
+      overdueDays: overdueStatus ? getOverdueDays(todo.dueDate) : null
+    };
+  });
+
   return (
     <div className="todo-list">
-      {todos.map((todo) => (
+      {todosWithStatus.map((todo) => (
         <TodoCard
           key={todo.id}
           todo={todo}

@@ -366,6 +366,35 @@ p {
   color: var(--text-secondary);
 }
 
+/* Overdue Indicators */
+.overdue-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  color: var(--danger-color);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.overdue-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.overdue-text {
+  color: var(--danger-color);
+}
+
+/* Dark mode support for overdue indicators */
+[data-theme="dark"] .overdue-indicator {
+  color: var(--danger-color);
+}
+
+[data-theme="dark"] .overdue-text {
+  color: var(--danger-color);
+}
+
 .todo-actions {
   display: flex;
   gap: 8px;

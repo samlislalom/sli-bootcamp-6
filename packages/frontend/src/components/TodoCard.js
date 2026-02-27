@@ -1,5 +1,22 @@
 import React, { useState } from 'react';
+import { formatOverdueText } from '../utils/dateUtils';
 
+/**
+ * TodoCard component displays a single todo item with options to edit, delete, and toggle completion.
+ * 
+ * @param {Object} props - Component props
+ * @param {Object} props.todo - Todo item object
+ * @param {number} props.todo.id - Unique identifier
+ * @param {string} props.todo.title - Task description
+ * @param {string|null} props.todo.dueDate - Due date (ISO 8601) or null
+ * @param {boolean|number} props.todo.completed - Completion status (boolean or 0/1)
+ * @param {boolean} [props.todo.isOverdue] - Whether todo is overdue (computed by parent)
+ * @param {number|null} [props.todo.overdueDays] - Days overdue or null (computed by parent)
+ * @param {Function} props.onToggle - Callback when completion status toggled
+ * @param {Function} props.onEdit - Callback when todo edited
+ * @param {Function} props.onDelete - Callback when todo deleted
+ * @param {boolean} props.isLoading - Loading state for async operations
+ */
 function TodoCard({ todo, onToggle, onEdit, onDelete, isLoading }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
@@ -123,6 +140,12 @@ function TodoCard({ todo, onToggle, onEdit, onDelete, isLoading }) {
           <p className="todo-due-date">
             Due: {formatDate(todo.dueDate)}
           </p>
+        )}
+        {todo.isOverdue && (
+          <div className="overdue-indicator">
+            <span className="overdue-icon" aria-label="Overdue warning">⚠️</span>
+            <span className="overdue-text">{formatOverdueText(todo.overdueDays)}</span>
+          </div>
         )}
       </div>
 

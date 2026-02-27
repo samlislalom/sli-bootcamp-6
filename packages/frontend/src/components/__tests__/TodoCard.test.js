@@ -99,4 +99,66 @@ describe('TodoCard Component', () => {
     
     expect(screen.queryByText(/Due:/)).not.toBeInTheDocument();
   });
+
+  describe('Overdue indicators', () => {
+    it('should render overdue indicators when isOverdue is true', () => {
+      const overdueTodo = { 
+        ...mockTodo, 
+        isOverdue: true,
+        overdueDays: 3
+      };
+      render(<TodoCard todo={overdueTodo} {...mockHandlers} isLoading={false} />);
+      
+      expect(screen.getByText('⚠️')).toBeInTheDocument();
+      expect(screen.getByText('3 days overdue')).toBeInTheDocument();
+    });
+
+    it('should not render overdue indicators when isOverdue is false', () => {
+      const notOverdueTodo = { 
+        ...mockTodo, 
+        isOverdue: false,
+        overdueDays: null
+      };
+      render(<TodoCard todo={notOverdueTodo} {...mockHandlers} isLoading={false} />);
+      
+      expect(screen.queryByText('⚠️')).not.toBeInTheDocument();
+      expect(screen.queryByText(/overdue/)).not.toBeInTheDocument();
+    });
+
+    it('should not render overdue for completed todo with past date', () => {
+      const completedOverdueTodo = { 
+        ...mockTodo, 
+        completed: 1,
+        isOverdue: false,  // Should be false for completed todos
+        overdueDays: null
+      };
+      render(<TodoCard todo={completedOverdueTodo} {...mockHandlers} isLoading={false} />);
+      
+      expect(screen.queryByText('⚠️')).not.toBeInTheDocument();
+      expect(screen.queryByText(/overdue/)).not.toBeInTheDocument();
+    });
+
+    it('should use singular form for 1 day overdue', () => {
+      const overdueTodo = { 
+        ...mockTodo, 
+        isOverdue: true,
+        overdueDays: 1
+      };
+      render(<TodoCard todo={overdueTodo} {...mockHandlers} isLoading={false} />);
+      
+      expect(screen.getByText('1 day overdue')).toBeInTheDocument();
+    });
+
+    it('should include aria-label for warning icon', () => {
+      const overdueTodo = { 
+        ...mockTodo, 
+        isOverdue: true,
+        overdueDays: 3
+      };
+      render(<TodoCard todo={overdueTodo} {...mockHandlers} isLoading={false} />);
+      
+      const warningIcon = screen.getByLabelText('Overdue warning');
+      expect(warningIcon).toBeInTheDocument();
+    });
+  });
 });
